@@ -2,14 +2,16 @@
 
 #include <iostream>
 #include <string>
+#include <iterator>
+
+#include "Utils.h" // Utilitaires
 
 
 void FPL_Print_Init(std::vector<std::string>& content_line_slitted, std::string& line) {
 	// Préparation
 
 	std::string whatReplace = "envoyer ";
-	std::string& ref_whatreplace = whatReplace;
-	std::string print_content = replace(line, ref_whatreplace);
+	std::string print_content = replaceFPL(line, whatReplace);
 
 
 	// Envoyer 
