@@ -27,11 +27,11 @@ Je tiens à préciser que tout est en français !
 
 # Commencer
 
-Tout d'abord, on voute invite à vous documenter sur la page [d'acceuil sur le wiki](https://github.com/Program132/French-Programming-Language/wiki/Accueil)
+Tout d'abord, on voute invite à vous documenter sur la page [d'acceuil sur le wiki](https://github.com/Program132/French-Programming-Language/wiki/Accueil).
 
-Ensuite, vous pouvez commencer à en apprendre plus sur le fonctionnement du langage (-> [les fichiers](https://github.com/Program132/French-Programming-Language/wiki/Les-fichiers-de-FPL) :))
+Ensuite, vous pouvez commencer à en apprendre plus sur le fonctionnement du langage (-> [les fichiers](https://github.com/Program132/French-Programming-Language/wiki/Les-fichiers-de-FPL)).
 
-Concernant le "départ", comme dans chaque langage, les prints, ici c'est [envoyer](https://github.com/Program132/French-Programming-Language/wiki/FPL-:-envoyer) car c'est un langage français :) !
+Concernant le "départ", comme dans chaque langage, les prints, ici c'est [envoyer](https://github.com/Program132/French-Programming-Language/wiki/FPL-:-envoyer) car c'est un langage français.
 
 # Liens utiles
 
