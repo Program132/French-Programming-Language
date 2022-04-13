@@ -7,14 +7,12 @@ Le Python est un langage nommé "simple" pour faire apprendre aux étudiants le 
 
 Cependant, ce n'est pas vraiment ma vision, le Python est rapide mais non facile à comprendre !
 
-Donc, j'ai déçidé de créer un langage de programmation en style français.
+Donc, j'ai déçidé de créer un langage de programmation en style français. Plus d'informations dans le wiki du projet.
 
 
 # Dernière version
 
-La dernière version est la V0.1 qui contient la base de la base.
-
-Contenu: 
+Contenu de la V0.1: 
 
 * Base du langage
 * envoyer
@@ -23,7 +21,10 @@ Contenu:
 # Documentation
 
 Vous trouverez une documentation dans le wiki du projet.
-Je tiens à préciser tout est en version Française !
+
+Je tiens à préciser que tout est en français !
 
 
-# 
+# Liens utiles
+
+[Serveur Discord de FPL](https://discord.gg/FgUzGTQaD3)
