@@ -5,37 +5,11 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
-#include "Management_Envoyer.h"
-
-// Utils
-
-std::vector<std::string> split(std::string& arg) {
-    std::string myBuffer;
-
-    std::vector<std::string> myVec;
-
-    std::stringstream ss;
-    ss << arg;
-    while (ss >> myBuffer) {
-        myVec.push_back(myBuffer);
-    }
-
-    return myVec;
-}
-
-std::vector<char> splitChar(std::string& arg) {
-    std::istringstream iss(arg);
-    std::vector<char> vec((std::istream_iterator<char>(iss)), std::istream_iterator<char>());;
-
-    return vec;
-}
-
-std::string replace(std::string& line, std::string& what) {
-    std::string result = line.replace(line.find(what), what.length(), "");
-    return result;
-}
+#include <iterator>
 
 
+#include "Utils.h" // Utilitaires
+#include "Management_Envoyer.h" // Pour executer: envoyer
 
 // FPL
 
