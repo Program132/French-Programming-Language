@@ -12,10 +12,11 @@ Donc, j'ai déçidé de créer un langage de programmation en style français. P
 
 # Dernière version
 
-Contenu de la V0.1: 
+Contenu de la V0.15: 
 
-* Base du langage
-* envoyer
+* Optimisation
+* Erreurs corrigé
+* Executable linux pour toute les prochaines mise à jours
 
 
 # Documentation
