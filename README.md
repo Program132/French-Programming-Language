@@ -27,4 +27,4 @@ Je tiens à préciser que tout est en français !
 
 # Liens utiles
 
-[Serveur Discord de FPL](https://discord.gg/FgUzGTQaD3)
+[Serveur Discord de FPL](https://discord.gg/CkFFgXuKwj)
