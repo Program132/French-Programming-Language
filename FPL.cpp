@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
+#include <iterator>
 
 #include <fstream> // Pour le fichier de base: Programme.fpl
 
+#include "headers/Utils.h" // Utilitaire
 #include "headers/FPL_F.h" // Les functions de base
 
 int main()
@@ -16,13 +18,9 @@ int main()
     {   
         if (line == " " || line == "") { continue; }
 
-        std::string& ref_line = line;
-        content_lines_splitted = split(ref_line);
+        content_lines_splitted = split(line);
 
-        std::vector<std::string>& ref_content_line_splitted = content_lines_splitted;
-        std::string& ref_line = line;
-
-        FrenchProgrammingLanguage_Init(ref_content_line_splitted, ref_line); // On envoit tout et des références pour ne pas obtenir des copies
+        FrenchProgrammingLanguage_Init(content_lines_splitted, line);
     } 
 
     std::cin.ignore();
