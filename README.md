@@ -1,7 +1,6 @@
 # French Programming Language
 
-FPL est un langage de programmation français par Program.
-
+FPL est un langage de programmation français par créé Program.
 
 Le Python est un langage nommé "simple" pour faire apprendre aux étudiants le code.
 
