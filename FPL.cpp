@@ -2,10 +2,11 @@
 #include <string>
 #include <iterator>
 
-#include <fstream> // Pour le fichier de base: Programme.fpl
+#include <fstream> // Pour le fichier de base
 
-#include "headers/Utils.h" // Utilitaire
+#include "headers/Utils/Utils.h" // Utilitaire
 #include "headers/FPL_F.h" // Les functions de base
+#include "headers/VariablesManagement.h"
 
 int main()
 {
@@ -14,13 +15,15 @@ int main()
     std::string line;
     std::vector<std::string> content_lines_splitted;
 
+    VariablesManagement variables;
+
     while (std::getline(file, line))
     {   
         if (line == " " || line == "") { continue; }
 
         content_lines_splitted = split(line);
 
-        FrenchProgrammingLanguage_Init(content_lines_splitted, line);
+        FrenchProgrammingLanguage_Init(variables, content_lines_splitted, line);
     } 
 
     std::cin.ignore();
