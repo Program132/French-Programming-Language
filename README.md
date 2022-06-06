@@ -11,8 +11,6 @@ Donc, j'ai déçidé de créer un langage de programmation en style français. P
 
 # Dernière version
 
-Contenu de la V0.20: 
-
 * Optimisation
 * Erreurs corrigé
 * Executable linux pour toute les prochaines mise à jours
