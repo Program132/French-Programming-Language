@@ -21,9 +21,9 @@ std::vector<std::string> splittermathFinalValue(std::string& arg) {
     return myVec;
 }
 
-int convertInt(std::string& n) {
+double convertInt(std::string& n) {
     try {
-        int v = std::stoi(n);
+        double v = std::stod(n);
         return v;
     }
     catch (std::invalid_argument const& ex) {
@@ -33,11 +33,11 @@ int convertInt(std::string& n) {
     return 0;
 }
 
-int mathFinalValue(std::string& content) {
+double mathFinalValue(std::string& content) {
     std::vector<std::string> vec = splittermathFinalValue(content);
 
     int i = 0;
-    int finalValue = 0;
+    double finalValue = 0;
 
     for (auto const e : vec) {
         if (i == 0) {
@@ -51,8 +51,8 @@ int mathFinalValue(std::string& content) {
             std::string numberBefore = vec[i - 1];
             std::string numberAfter = vec[i + 1];
 
-            int numberB = convertInt(numberBefore);
-            int numberA = convertInt(numberAfter);
+            double numberB = convertInt(numberBefore);
+            double numberA = convertInt(numberAfter);
 
             if (finalValue == 0) {
                 finalValue += numberB + numberA;
@@ -65,8 +65,8 @@ int mathFinalValue(std::string& content) {
             std::string numberBefore = vec[i - 1];
             std::string numberAfter = vec[i + 1];
 
-            int numberB = convertInt(numberBefore);
-            int numberA = convertInt(numberAfter);
+            double numberB = convertInt(numberBefore);
+            double numberA = convertInt(numberAfter);
 
             if (finalValue == 0) {
                 finalValue -= numberA - numberB;
@@ -79,8 +79,8 @@ int mathFinalValue(std::string& content) {
             std::string numberBefore = vec[i - 1];
             std::string numberAfter = vec[i + 1];
 
-            int numberB = convertInt(numberBefore);
-            int numberA = convertInt(numberAfter);
+            double numberB = convertInt(numberBefore);
+            double numberA = convertInt(numberAfter);
 
             if (finalValue == 0) {
                 finalValue = numberB * numberA;
@@ -93,8 +93,8 @@ int mathFinalValue(std::string& content) {
             std::string numberBefore = vec[i - 1];
             std::string numberAfter = vec[i + 1];
 
-            int numberB = convertInt(numberBefore);
-            int numberA = convertInt(numberAfter);
+            double numberB = convertInt(numberBefore);
+            double numberA = convertInt(numberAfter);
 
             if (finalValue == 0) {
                 finalValue = numberB / numberA;
