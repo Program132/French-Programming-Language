@@ -5,3 +5,5 @@
 void errorInstruction();
 
 void errorVariable(std::string& name);
+
+void errorIntroduireVariable();

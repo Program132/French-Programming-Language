@@ -24,3 +24,7 @@ void errorVariable(std::string& name) {
 		std::cout << "FPL Erreur : Votre variable ne peut pas etre declare !" << std::endl;
 	}
 }
+
+void errorIntroduireVariable() {
+	std::cout << "FPL Erreur : Pour introduire une variable dans votre message, merci d'ouvrir et de fermer les accolades : [NOM DE VOTRE VARIABLE] !" << std::endl;
+}
