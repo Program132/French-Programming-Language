@@ -12,9 +12,10 @@ Donc, j'ai déçidé de créer un langage de programmation en style français. P
 # Dernière version
 
 * Optimisation
-* Erreurs corrigé
+* Erreurs corrigées
 * Executable linux pour toute les prochaines mise à jours
 * Les variables sont prêtes (deux types : math et texte)
+* Insertion des variables dans les _envoyer_ !
 
 
 # Documentation
