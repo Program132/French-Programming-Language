@@ -5,7 +5,10 @@ void FrenchProgrammingLanguage_Init(VariablesManagement& var, std::vector<std::s
         FPL_Print_Init(var, line);
     }
     else if (content_line_slitted[0] == "variable") {
-        var.init(line);
+        var.variables_basics(line);
+    }
+    else if (content_line_slitted[0] == "changer") {
+        var.variables_update(line);
     }
     else {
         errorInstruction();
