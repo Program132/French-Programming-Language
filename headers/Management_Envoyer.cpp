@@ -10,8 +10,8 @@ void FPL_Print_Init(VariablesManagement& var, std::string& line) {
     if (vec.size() == 1) {
         if (var.isVariable(vec[0])) {
             std::cout << var.getVariableValue(vec[0]) << std::endl;
+            continuer = false;
         }
-        continuer = false;
     }
 
     if (continuer) {
