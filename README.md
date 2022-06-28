@@ -8,30 +8,15 @@ Cependant, ce n'est pas vraiment ma vision, le Python est rapide mais non facile
 
 Donc, j'ai déçidé de créer un langage de programmation en style français. Plus d'informations dans le wiki du projet.
 
-
-# Dernière version
-
-* Optimisation
-* Erreurs corrigées
-* Executable linux pour toute les prochaines mise à jours
-* Les variables sont prêtes (deux types : math et texte)
-* Insertion des variables dans les _envoyer_ !
-
-
-# Documentation
-
-Vous trouverez une documentation dans le wiki du projet.
-
-Je tiens à préciser que tout est en français !
-
 # Commencer
 
-Tout d'abord, on voute invite à vous documenter sur la page [d'acceuil sur le wiki](https://github.com/Program132/French-Programming-Language/wiki/Accueil).
+Tout d'abord, on voute invite à vous documenter sur la page [d'acceuil sur la documentation](https://program-4.gitbook.io/french-programming-language/).
 
-Ensuite, vous pouvez commencer à en apprendre plus sur le fonctionnement du langage (-> [les fichiers](https://github.com/Program132/French-Programming-Language/wiki/Les-fichiers-de-FPL)).
+Ensuite, vous pouvez commencer à en apprendre plus sur le fonctionnement du langage (-> [les fichiers](https://program-4.gitbook.io/french-programming-language/les-fichiers).
 
-Concernant le "départ", comme dans chaque langage, les prints, ici c'est [envoyer](https://github.com/Program132/French-Programming-Language/wiki/FPL-:-envoyer) car c'est un langage français.
+Concernant le "départ", comme dans chaque langage, les prints, ici c'est [envoyer](https://program-4.gitbook.io/french-programming-language/instructions/le-print) car c'est un langage français.
 
 # Liens utiles
 
 [Serveur Discord de FPL](https://discord.gg/CkFFgXuKwj)
+[Documentation de FPl](https://program-4.gitbook.io/french-programming-language/)
