@@ -7,3 +7,5 @@ void errorInstruction();
 void errorVariable(std::string& name);
 
 void errorIntroduireVariable();
+
+void errorUpdateVariable(std::string& name);
