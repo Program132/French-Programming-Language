@@ -28,3 +28,18 @@ void errorVariable(std::string& name) {
 void errorIntroduireVariable() {
 	std::cout << "FPL Erreur : Pour introduire une variable dans votre message, merci d'ouvrir et de fermer les accolades : [NOM DE VOTRE VARIABLE] !" << std::endl;
 }
+
+void errorUpdateVariable(std::string& name) {
+	if (name == "name") {
+		std::cout << "FPL Erreur : Vous devez indiquer le nom de votre variable !" << std::endl;
+	}
+	else if (name == "indication") {
+		std::cout << "FPL Erreur : Vous devez indiquer le symbole -> pour dire au programme que vous attribuez une valeur a votre variable !" << std::endl;
+	}
+	else if (name == "value") {
+		std::cout << "FPL Erreur : Vous devez donner une nouvelle valeur a votre variable !" << std::endl;
+	}
+	else if (name == "basic") {
+		std::cout << "FPL Erreur : Vous devez suivre ce format 'changer [variable] -> [nouvelle valeur]' merci !" << std::endl;
+	}
+}
