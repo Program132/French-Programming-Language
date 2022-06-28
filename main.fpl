@@ -1,0 +1,16 @@
+envoyer HEY MAN
+
+variable texte cc -> HEY
+variable math calcul -> 5 + 15
+variable math calculdeux -> 1.5 + 3
+
+envoyer hi man
+envoyer cc
+envoyer calcul
+envoyer calculdeux
+envoyer bye man
+
+envoyer Resultat de 1,5 + 3 : [calculdeux]
+
+changer cc -> BYE
+envoyer cc
