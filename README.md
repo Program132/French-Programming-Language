@@ -1,4 +1,4 @@
-# French Programming Language
+# **French Programming Language**
 
 FPL est un langage de programmation français par créé Program.
 
@@ -8,7 +8,9 @@ Cependant, ce n'est pas vraiment ma vision, le Python est rapide, mais non facil
 
 Donc, j'ai décidé de créer un langage de programmation en style français. Plus d'informations dans le wiki du projet.
 
-# Merci :3 :) !
+Avant de commencer, merci de prendre attention à cette page : [code de conduite](CodeOfConduct.md).
+
+## **Merci** !!!
 
 L'entreprise JetBrains propose de nombreux produits très utiles au développement informatique.
 
@@ -16,15 +18,26 @@ Je les remercie énormément, car ils m'ont permis d'avoir accès à leurs logic
 
 Je remercie également mes amis et la communauté de FPL pour vous.
 
-# Commencer
+Honnêtement, j'adore utiliser leurs outils et ce qu'ils proposent est juste incroyable. 
 
-Tout d'abord, on voute invite à vous documenter sur la page [d'accueil sur la documentation](https://program-4.gitbook.io/french-programming-language/).
+Cela dépend de vos gouts, mais si vous le souhaitez (et je vous conseille) vous pouvez essayer les outils et voir s'ils sont bons à vos yeux.
 
-Ensuite, vous pouvez commencer à en apprendre plus sur le fonctionnement du langage (-> [les fichiers](https://program-4.gitbook.io/french-programming-language/les-fichiers).
+Depuis que j'utilise leurs outils, je me sens bien et presque mieux je dirais.
 
-Concernant le "départ", comme dans chaque langage, les prints, ici, c'est [envoyer,](https://program-4.gitbook.io/french-programming-language/instructions/le-print) car c'est un langage français.
+[Site de JetBrains](https://www.jetbrains.com/fr-fr/)
 
-# Liens utiles
+## **Commencer**
+
+CELA EST WIP (Work in progress) :> !
+
+## **Liens utiles + Important**
+
+[Code de conduite](CodeOfConduct.md)
+
+[Contribuer au projet](CONTRIBUTING.md)
 
 [Serveur Discord de FPL](https://discord.gg/CkFFgXuKwj)
+
+[Site de JetBrains](https://www.jetbrains.com/fr-fr/)
+
 [Documentation de FPl](https://program-4.gitbook.io/french-programming-language/)
