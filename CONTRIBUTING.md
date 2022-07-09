@@ -10,3 +10,5 @@ Si vous avez un compte discord, je vous conseille devenir directement dessus, ce
 ## Proposer des idées
 
 N'hésitez pas à me faire part de vos suggestions et idées pour apporter des nouveautés ou amélioré le projet.
+
+Vous pouvez m'en faire part dans _[pull requests](https://github.com/Program132/French-Programming-Language/pulls)_ ou sur le serveur discord dans le channel respectif.
