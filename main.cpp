@@ -16,11 +16,9 @@ int main() {
     FPL::TokenBuilding t;
     std::vector<FPL::Token> tokens = t.parseToken(f_content);
 
-    /*
-        for (auto &token : tokens) {
-            token.DebugPrint();
-        }
-     */
+    for (auto &token : tokens) {
+        //token.DebugPrint();
+    }
 
     FPL::Parser parser;
     parser.parse(tokens);

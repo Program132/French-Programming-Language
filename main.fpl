@@ -1,9 +1,3 @@
-definir principal(texte arg, entier a) {
-    variable entier a -> 10
-    variable decimal b -> 10.5
-    envoyer "Yo la compagnie."
-}
+variable entier a -> 1000
 
 envoyer "Yo la compagnie."
-
-variable entier nombre -> 50

@@ -112,49 +112,46 @@ namespace FPL {
     }
 
     bool Parser::VariableDeclaration() {
+        --mCurrentToken;
         auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value() && PeutEtreInstruction->mText == "variable") {
-            auto pType = CheckerType();
-            if (pType.has_value()) {
-                if (pType->mType == VOID) {
-                    std::cerr << "Le type 'vide' n'est pas possible pour une variable." << std::endl;
-                    mCurrentToken = parseStart;
-                }
-
-                auto pName = CheckerIdentifiant();
-                if (pName.has_value()) {
-
+            auto VarType = CheckerType();
+            if (VarType.has_value()) {
+                auto VarName = CheckerIdentifiant();
+                if (VarName.has_value()) {
                     if (CheckerOperateur("-").has_value()) {
                         if (CheckerOperateur(">").has_value()) {
-                            auto pValue = CheckerValue();
-                            if (pValue.has_value()) {
-                                //VariableDefinition variable(pName->mText, pType->mName, pType->mType);
-                                VariableDefinition variable;
-                                variable.VariableName = pName->mText;
-                                variable.VariableType = Type(pType->mName, pType->mType);
-                                variable.GiveValue(mCurrentToken->mText);
+                            auto VarValue = CheckerValue();
+                            if (VarValue.has_value()) {
+                                if (VarValue->StatementType.mType == VarType->mType) {
+                                    VariableDefinition variable;
+                                    variable.VariableName = VarName->mText;
+                                    variable.VariableType = Type(VarType->mName, VarType->mType);
+                                    variable.VariableValue = VarValue->StatementName;
 
-                                mVariables[variable.VariableName] = variable;
-                                return true;
+                                    mVariables[variable.VariableName] = variable;
+                                    return true;
+                                } else {
+                                    throw std::runtime_error("Vous devez donner une valeur qui est de même type que la variable.");
+                                }
                             } else {
-                                throw std::runtime_error("Vous devez donner une valeur a votre variable.");
+                                throw std::runtime_error("Vous devez donner une valeur a la variable qui correspond au type.");
                             }
                         } else {
-                            throw std::runtime_error("Pour donner la valeur à votre variable, merci d'utiliser '->'.");
+                            throw std::runtime_error("Vous devez utiliser les symboles '->' pour donner une valeur à la variable.");
                         }
                     } else {
-                        throw std::runtime_error("Pour donner la valeur à votre variable, merci d'utiliser '->'.");
+                        throw std::runtime_error("Vous devez utiliser les symboles '->' pour donner une valeur à la variable.");
                     }
                 } else {
-                    std::cerr << "Vous devez donner un nom à votre variable." << std::endl;
-                    mCurrentToken = parseStart;
+                    throw std::runtime_error("Vous devez indiquer un nom à la variable.");
                 }
             } else {
-                std::cerr << "Vous devez mettre le type de votre variable." << std::endl;
-                mCurrentToken = parseStart;
+                throw std::runtime_error("Vous devez indiquer une type pour la variable.");
             }
         }
+        ++mCurrentToken;
         return false;
     }
 
@@ -169,11 +166,11 @@ namespace FPL {
             }
 
             if (PrintStat()) {
-
+                ++mCurrentToken;
             }
 
             if (VariableDeclaration()) {
-
+                ++mCurrentToken;
             } else {
                 if (mCurrentToken->mText.empty()) {
                     continue;

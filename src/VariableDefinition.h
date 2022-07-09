@@ -23,6 +23,7 @@ namespace FPL {
 
     class Statement {
     public:
+        Statement();
         Statement(StatementKind kind, std::string name, Type type);
 
         std::string StatementName;
@@ -32,15 +33,8 @@ namespace FPL {
 
     class VariableDefinition {
     public:
-        //VariableDefinition(std::string name, std::string typeName, enum BUILTIN_TYPE type) : VariableName(name), VariableType(Type(typeName, type)){};
-
         std::string VariableName;
         Type VariableType;
-
-        int valueVarI; // Valeur si c'est un int
-        double valueVarD; // Valeur si c'est un décimal
-        std::string valueVarS; // Valeur si c'est une chaine de caractere (en FPL, texte)
-
-        void GiveValue(const std::string &value);
+        std::string VariableValue;
     };
 }
