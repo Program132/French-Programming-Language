@@ -113,10 +113,12 @@ namespace FPL {
 
                                     return true;
                                 } else {
-                                    throw std::runtime_error("Vous devez donner une valeur qui est de même type que la variable.");
+                                    std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
+                                    mCurrentToken = parseStart;
                                 }
                             } else {
-                                throw std::runtime_error("Vous devez donner une valeur a la variable qui correspond au type.");
+                                std::cerr << "Vous devez donner une valeur a la variable qui correspond au type." << std::endl;
+                                mCurrentToken = parseStart;
                             }
                         } else {
                             std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
@@ -240,23 +242,22 @@ namespace FPL {
         {
             Statement doubleLitteralStatement (StatementKind::LITTERAL, mCurrentToken->mText, Type("decimal", DOUBLE));
             res = doubleLitteralStatement;
-            ++mCurrentToken;
         }
         else if (mCurrentToken->mType == ENTIER_LITERAL)
         {
             Statement integerLitteralStatement(StatementKind::LITTERAL, mCurrentToken->mText, Type("entier", INT));
             res = integerLitteralStatement;
-            ++mCurrentToken;
         }
         else if (mCurrentToken->mType == CHAINE_LITERAL)
         {
             Statement stringLitteralStatement(StatementKind::LITTERAL, mCurrentToken->mText, Type("text", STRING));
             res = stringLitteralStatement;
-            ++mCurrentToken;
+
         } else {
             return std::nullopt;
         }
 
+        ++mCurrentToken;
         return res;
     }
 
