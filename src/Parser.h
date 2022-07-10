@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <string_view>
 #include <stdexcept>
 #include <optional>
 #include <map>
@@ -25,10 +26,9 @@ namespace FPL {
 
     private:
         // Essentielles:
-        std::optional<Type> CheckerType(const std::string &name = std::string());
-        std::optional<Token> CheckerIdentifiant(const std::string &name = std::string());
-        std::optional<Token> CheckerOperateur(const std::string &name = std::string());
-        std::optional<Token> CheckerChaineLitteral(const std::string &name = std::string());
+        std::optional<Type> CheckerType(std::string_view name = std::string());
+        std::optional<Token> CheckerIdentifiant(std::string_view name = std::string());
+        std::optional<Token> CheckerOperateur(std::string_view name = std::string());
         std::optional<Statement> CheckerValue();
 
 

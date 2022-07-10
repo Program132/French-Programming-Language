@@ -105,6 +105,10 @@ namespace FPL {
                                     variable.VariableType = Type(VarType->mName, VarType->mType);
                                     variable.VariableValue = VarValue->StatementName;
 
+                                    if (VarType->mType == STRING) {
+                                        std::replace(variable.VariableValue.begin(), variable.VariableValue.end(), '"', ' ');
+                                    }
+
                                     mVariables[variable.VariableName] = variable;
 
                                     std::cout << "La variable '"
@@ -140,17 +144,17 @@ namespace FPL {
         return false;
     }
 
-
     bool Parser::Print() {
         auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
             if (PeutEtreInstruction->mText == "envoyer") {
-                auto ChaineEnter = CheckerChaineLitteral();
-                if (ChaineEnter.has_value()) {
-                    std::string printContent = ChaineEnter->mText;
-                    std::replace(printContent.begin(), printContent.end(), '"', ' ');
-                    std::cout << printContent << std::endl;
+                auto Value = CheckerValue();
+                if (Value.has_value()) {
+                    if (Value->StatementType.mType == STRING) {
+                        std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
+                    }
+                    std::cout << Value->StatementName << std::endl;
                     return true;
                 } else {
                     mCurrentToken = parseStart;
@@ -191,17 +195,7 @@ namespace FPL {
         }
     }
 
-    std::optional<Token> Parser::CheckerChaineLitteral(const std::string &name) {
-        if (mCurrentToken == mEndToken) { return std::nullopt; }
-        if (mCurrentToken->mType != CHAINE_LITERAL) { return std::nullopt; }
-        if (mCurrentToken->mText != name && !name.empty()) { return std::nullopt; }
-
-        auto returnToken = mCurrentToken;
-        ++mCurrentToken;
-        return *returnToken;
-    }
-
-    std::optional<Token> Parser::CheckerIdentifiant(const std::string &name) {
+    std::optional<Token> Parser::CheckerIdentifiant(std::string_view name) {
         if (mCurrentToken == mEndToken) { return std::nullopt; }
         if (mCurrentToken->mType != IDENTIFIANT) { return std::nullopt; }
         if (mCurrentToken->mText != name && !name.empty()) { return std::nullopt; }
@@ -211,7 +205,7 @@ namespace FPL {
         return *returnToken;
     }
 
-    std::optional<Token> Parser::CheckerOperateur(const std::string &name) {
+    std::optional<Token> Parser::CheckerOperateur(std::string_view name) {
         if (mCurrentToken == mEndToken) { return std::nullopt; }
         if (mCurrentToken->mType != OPERATEUR) { return std::nullopt; }
         if (mCurrentToken->mText != name && !name.empty()) { return std::nullopt; }
@@ -222,7 +216,7 @@ namespace FPL {
         return *returnToken; // On donne l'opérateur
     }
 
-    std::optional<Type> Parser::CheckerType(const std::string &name) {
+    std::optional<Type> Parser::CheckerType(std::string_view name) {
         auto possibleType = CheckerIdentifiant();
         if (!possibleType.has_value()) { return std::nullopt; }
 
