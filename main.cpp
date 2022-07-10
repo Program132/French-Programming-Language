@@ -4,7 +4,7 @@
 #include <fstream>
 
 int main() {
-    std::cout << "F.P.L. : Chargement\n\n" << std::endl;
+    //std::cout << "F.P.L. : Chargement\n\n" << std::endl;
 
     std::ifstream file {"../main.fpl"};
     if (!file) { std::cerr << "Fichier introuvable." << std::endl; return 1; }
