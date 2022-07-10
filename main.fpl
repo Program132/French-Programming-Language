@@ -1,3 +1,7 @@
 variable entier a -> 1000
+variable entier b -> 100
+
+variable decimal c -> 1.5
 
 envoyer "Yo la compagnie."
+envoyer "Yo la compagnie 2."
