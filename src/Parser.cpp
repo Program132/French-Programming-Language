@@ -87,32 +87,7 @@ namespace FPL {
         return false;
     }
 
-
-    bool Parser::PrintStat() {
-        auto parseStart = mCurrentToken; // std::vector<Token>::iterator
-        auto PeutEtreInstruction = CheckerIdentifiant();
-        if (PeutEtreInstruction.has_value()) {
-            if (PeutEtreInstruction->mText == "envoyer") {
-                auto ChaineEnter = CheckerChaineLitteral();
-                if (ChaineEnter.has_value()) {
-                    std::string printContent = ChaineEnter->mText;
-                    std::replace(printContent.begin(), printContent.end(), '"', ' ');
-                    std::cout << printContent;
-                    std::cout << std::endl;
-                    return true;
-                } else {
-                    std::cerr
-                            << "Vous devez mettre des \" pour ouvrir et fermer l'instruction que si le type est texte."
-                            << std::endl;
-                    mCurrentToken = parseStart;
-                }
-            }
-        }
-        return false;
-    }
-
     bool Parser::VariableDeclaration() {
-        --mCurrentToken;
         auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value() && PeutEtreInstruction->mText == "variable") {
@@ -131,6 +106,11 @@ namespace FPL {
                                     variable.VariableValue = VarValue->StatementName;
 
                                     mVariables[variable.VariableName] = variable;
+
+                                    std::cout << "La variable '"
+                                    << mVariables[variable.VariableName].VariableName << "' a pour valeur "
+                                    << mVariables[variable.VariableName].VariableValue << std::endl;
+
                                     return true;
                                 } else {
                                     throw std::runtime_error("Vous devez donner une valeur qui est de même type que la variable.");
@@ -139,21 +119,48 @@ namespace FPL {
                                 throw std::runtime_error("Vous devez donner une valeur a la variable qui correspond au type.");
                             }
                         } else {
-                            throw std::runtime_error("Vous devez utiliser les symboles '->' pour donner une valeur à la variable.");
+                            std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                            mCurrentToken = parseStart;
                         }
                     } else {
-                        throw std::runtime_error("Vous devez utiliser les symboles '->' pour donner une valeur à la variable.");
+                        std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                        mCurrentToken = parseStart;
                     }
                 } else {
-                    throw std::runtime_error("Vous devez indiquer un nom à la variable.");
+                    std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
+                    mCurrentToken = parseStart;
                 }
             } else {
-                throw std::runtime_error("Vous devez indiquer une type pour la variable.");
+                std::cerr << "Vous devez indiquer une type pour la variable." << std::endl;
+                mCurrentToken = parseStart;
             }
         }
-        ++mCurrentToken;
         return false;
     }
+
+
+    bool Parser::Print() {
+        auto parseStart = mCurrentToken; // std::vector<Token>::iterator
+        auto PeutEtreInstruction = CheckerIdentifiant();
+        if (PeutEtreInstruction.has_value()) {
+            if (PeutEtreInstruction->mText == "envoyer") {
+                auto ChaineEnter = CheckerChaineLitteral();
+                if (ChaineEnter.has_value()) {
+                    std::string printContent = ChaineEnter->mText;
+                    std::replace(printContent.begin(), printContent.end(), '"', ' ');
+                    std::cout << printContent << std::endl;
+                    return true;
+                } else {
+                    mCurrentToken = parseStart;
+                    std::cerr << "Vous devez mettre des \" pour ouvrir et fermer l'instruction que si le type est texte." << std::endl;
+                }
+            } else {
+                mCurrentToken = parseStart;
+            }
+        }
+        return false;
+    }
+
 
 
     void Parser::parse(std::vector<Token> &tokens) {
@@ -165,17 +172,18 @@ namespace FPL {
 
             }
 
-            if (PrintStat()) {
-                ++mCurrentToken;
+            if (Print()) {
+
             }
 
             if (VariableDeclaration()) {
-                ++mCurrentToken;
+
             } else {
                 if (mCurrentToken->mText.empty()) {
                     continue;
                 }
-                std::cerr << "Identifier inconnu : " << Parser::mCurrentToken->mText << std::endl;
+
+                std::cerr << "Identifier inconnu : " << mCurrentToken->mText << std::endl;
                 ++mCurrentToken;
             }
         }

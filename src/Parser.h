@@ -33,11 +33,12 @@ namespace FPL {
 
 
         // Print :
-        bool PrintStat();
+        bool Print();
 
         // Variable :
         bool VariableDeclaration();
         std::map<std::string, VariableDefinition> mVariables;
+        bool isVariable(std::string &name);
 
         // Fonctions :
         bool FunctionChecker();
