@@ -4,4 +4,7 @@ variable entier b -> 100
 variable decimal c -> 1.5
 
 envoyer "Yo la compagnie."
+
+variable decimal d -> 2.5
+
 envoyer "Yo la compagnie 2."
