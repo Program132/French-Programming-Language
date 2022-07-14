@@ -5,7 +5,6 @@ variable decimal c -> 1.5
 
 envoyer "Yo la compagnie."
 
-variable decimal d -> 2.5
-variable texte e -> "Yo"
-
 envoyer "Yo la compagnie 2."
+
+envoyer c <-
