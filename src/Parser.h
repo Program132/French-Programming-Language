@@ -32,11 +32,9 @@ namespace FPL {
         std::optional<Statement> CheckerValue();
 
 
-        // Print :
-        bool Print();
+        // Print : In the ManagerInstruction
 
         // Variable :
-        bool VariableDeclaration();
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name);
 
@@ -49,5 +47,9 @@ namespace FPL {
         std::vector<Token>::iterator mCurrentToken;
         std::vector<Token>::iterator mEndToken;
         std::map<std::string, Type> mTypes;
+
+        bool ManagerInstruction();
+
+
     };
 }

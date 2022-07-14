@@ -87,64 +87,7 @@ namespace FPL {
         return false;
     }
 
-    bool Parser::VariableDeclaration() {
-        auto parseStart = mCurrentToken; // std::vector<Token>::iterator
-        auto PeutEtreInstruction = CheckerIdentifiant();
-        if (PeutEtreInstruction.has_value() && PeutEtreInstruction->mText == "variable") {
-            auto VarType = CheckerType();
-            if (VarType.has_value()) {
-                auto VarName = CheckerIdentifiant();
-                if (VarName.has_value()) {
-                    if (CheckerOperateur("-").has_value()) {
-                        if (CheckerOperateur(">").has_value()) {
-                            auto VarValue = CheckerValue();
-                            if (VarValue.has_value()) {
-                                if (VarValue->StatementType.mType == VarType->mType) {
-                                    VariableDefinition variable;
-                                    variable.VariableName = VarName->mText;
-                                    variable.VariableType = Type(VarType->mName, VarType->mType);
-                                    variable.VariableValue = VarValue->StatementName;
-
-                                    if (VarType->mType == STRING) {
-                                        std::replace(variable.VariableValue.begin(), variable.VariableValue.end(), '"', ' ');
-                                    }
-
-                                    mVariables[variable.VariableName] = variable;
-
-                                    std::cout << "La variable '"
-                                    << mVariables[variable.VariableName].VariableName << "' a pour valeur "
-                                    << mVariables[variable.VariableName].VariableValue << std::endl;
-
-                                    return true;
-                                } else {
-                                    std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
-                                    mCurrentToken = parseStart;
-                                }
-                            } else {
-                                std::cerr << "Vous devez donner une valeur a la variable qui correspond au type." << std::endl;
-                                mCurrentToken = parseStart;
-                            }
-                        } else {
-                            std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
-                            mCurrentToken = parseStart;
-                        }
-                    } else {
-                        std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
-                        mCurrentToken = parseStart;
-                    }
-                } else {
-                    std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
-                    mCurrentToken = parseStart;
-                }
-            } else {
-                std::cerr << "Vous devez indiquer une type pour la variable." << std::endl;
-                mCurrentToken = parseStart;
-            }
-        }
-        return false;
-    }
-
-    bool Parser::Print() {
+    bool Parser::ManagerInstruction() {
         auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
@@ -158,11 +101,78 @@ namespace FPL {
                     return true;
                 } else {
                     mCurrentToken = parseStart;
-                    std::cerr << "Vous devez mettre des \" pour ouvrir et fermer l'instruction que si le type est texte." << std::endl;
+                    ++mCurrentToken;
+                    auto value = CheckerIdentifiant();
+                    if (value.has_value()) {
+                        if (CheckerOperateur("<").has_value()) {
+                            if (CheckerOperateur("-").has_value()) {
+                                if (isVariable(value->mText)) {
+                                    std::cout << mVariables[value->mText].VariableValue << std::endl;
+                                    return true;
+                                } else {
+                                    mCurrentToken = parseStart;
+                                    std::cerr << "La variable n'existe pas." << std::endl;
+                                }
+                            }
+                        }
+                    }
+                    std::cerr << "Vous devez ouvrir les guillements pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer (variable) <-" << std::endl;
+                    return false;
+                }
+            } else if (PeutEtreInstruction->mText == "variable") {
+                auto VarType = CheckerType();
+                if (VarType.has_value()) {
+                    auto VarName = CheckerIdentifiant();
+                    if (VarName.has_value()) {
+                        if (CheckerOperateur("-").has_value()) {
+                            if (CheckerOperateur(">").has_value()) {
+                                auto VarValue = CheckerValue();
+                                if (VarValue.has_value()) {
+                                    if (VarValue->StatementType.mType == VarType->mType) {
+                                        VariableDefinition variable;
+                                        variable.VariableName = VarName->mText;
+                                        variable.VariableType = Type(VarType->mName, VarType->mType);
+                                        variable.VariableValue = VarValue->StatementName;
+
+                                        if (VarType->mType == STRING) {
+                                            std::replace(variable.VariableValue.begin(), variable.VariableValue.end(), '"', ' ');
+                                        }
+
+                                        mVariables[variable.VariableName] = variable;
+
+                                        std::cout << "La variable '"
+                                                  << mVariables[variable.VariableName].VariableName  << "' a pour valeur "
+                                                  << mVariables[variable.VariableName].VariableValue << std::endl;
+
+                                        return true;
+                                    } else {
+                                        std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
+                                        mCurrentToken = parseStart;
+                                    }
+                                } else {
+                                    std::cerr << "Vous devez donner une valeur a la variable qui correspond au type." << std::endl;
+                                    mCurrentToken = parseStart;
+                                }
+                            } else {
+                                std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                                mCurrentToken = parseStart;
+                            }
+                        } else {
+                            std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                            mCurrentToken = parseStart;
+                        }
+                    } else {
+                        std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
+                        mCurrentToken = parseStart;
+                    }
+                } else {
+                    std::cerr << "Vous devez indiquer une type pour la variable." << std::endl;
+                    mCurrentToken = parseStart;
                 }
             } else {
                 mCurrentToken = parseStart;
             }
+            return false;
         }
         return false;
     }
@@ -174,15 +184,7 @@ namespace FPL {
         mCurrentToken = tokens.begin();
 
         while (mCurrentToken != mEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
-            if (FunctionChecker()) {
-
-            }
-
-            if (Print()) {
-
-            }
-
-            if (VariableDeclaration()) {
+            if (ManagerInstruction()) {
 
             } else {
                 if (mCurrentToken->mText.empty()) {
@@ -262,5 +264,12 @@ namespace FPL {
                 std::cout << e << std::endl;
             }
         }
+    }
+
+    bool Parser::isVariable(std::string &name) {
+        if (mVariables.contains(name)) {
+            return true;
+        }
+        return false;
     }
 }
