@@ -26,7 +26,7 @@ namespace FPL {
 
     private:
         // Essentielles:
-        std::optional<Type> CheckerType(std::string_view name = std::string());
+        std::optional<Type> CheckerType();
         std::optional<Token> CheckerIdentifiant(std::string_view name = std::string());
         std::optional<Token> CheckerOperateur(std::string_view name = std::string());
         std::optional<Statement> CheckerValue();
@@ -37,9 +37,11 @@ namespace FPL {
         // Variable :
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name);
+        bool VariableInstruction(auto parseStart);
+        bool PrintInstruction(auto parseStart);
 
         // Fonctions :
-        bool FunctionChecker();
+        bool FunctionChecker(auto parseStart);
         std::map<std::string, FonctionDefinition> mFonctions;
 
 
@@ -49,7 +51,5 @@ namespace FPL {
         std::map<std::string, Type> mTypes;
 
         bool ManagerInstruction();
-
-
     };
 }
