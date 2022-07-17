@@ -89,6 +89,7 @@ namespace FPL {
                 case '<':
                 case ';':
                 case ',':
+                case '|':
                     if (currentToken.mType != CHAINE_LITERAL) {
                         endToken(currentToken, tokens);
                         currentToken.mType = OPERATEUR;
