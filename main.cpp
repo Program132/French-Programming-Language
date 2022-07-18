@@ -5,8 +5,6 @@
 #include <fstream>
 
 int main() {
-    //std::cout << "F.P.L. : Chargement\n\n" << std::endl;
-
     std::string fileName;
     std::cout << "Fichier : ";
     std::cin >> fileName;
