@@ -7,4 +7,10 @@ envoyer "Yo la compagnie."
 
 envoyer "Yo la compagnie 2."
 
-variable entier d -> 1 |
+envoyer c <-
+
+changer a -> 1
+
+envoyer a <-
+
+envoyer "Yo la compagnie 4."
