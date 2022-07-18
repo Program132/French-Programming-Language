@@ -182,7 +182,7 @@ namespace FPL {
                     }
                 }
             }
-            std::cerr << "Vous devez ouvrir les guillements pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer (variable) <-" << std::endl;
+            std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer (variable) <-" << std::endl;
         }
         return false;
     }
