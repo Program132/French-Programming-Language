@@ -51,5 +51,7 @@ namespace FPL {
         std::map<std::string, Type> mTypes;
 
         bool ManagerInstruction();
+
+        bool ChangerInstruction(auto parseStart);
     };
 }

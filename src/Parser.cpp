@@ -82,6 +82,12 @@ namespace FPL {
         auto VarType = CheckerType();
         if (VarType.has_value()) {
             auto VarName = CheckerIdentifiant();
+
+            if (isVariable(VarName->mText)) {
+                std::cerr << "Veuillez choisir un autre nom pour votre variable." << std::endl;
+                return false;
+            }
+
             if (VarName.has_value()) {
                 if (CheckerOperateur("-").has_value()) {
                     if (CheckerOperateur(">").has_value()) {
@@ -95,11 +101,6 @@ namespace FPL {
                                     variable.VariableValue = VarValue->StatementName;
 
                                     mVariables[variable.VariableName] = variable;
-
-                                    std::cout << "La variable '"
-                                              << mVariables[variable.VariableName].VariableName  << "' a pour valeur "
-                                              << mVariables[variable.VariableName].VariableValue << std::endl;
-
                                     return true;
                                 } else {
                                     std::cerr << "Merci de signifier la fin de la déclaration de la variable avec '|'." << std::endl;
@@ -119,6 +120,39 @@ namespace FPL {
             } else {
                 std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
             }
+        }
+        return false;
+    }
+
+    bool Parser::ChangerInstruction(auto parseStart) {
+        auto VarName = CheckerIdentifiant();
+        if (VarName.has_value()) {
+            if (isVariable(VarName->mText)) {
+                auto VarType = mVariables[VarName->mText].VariableType;
+                if (CheckerOperateur("-").has_value()) {
+                    if (CheckerOperateur(">").has_value()) {
+                        auto Value = CheckerValue();
+                        if (Value.has_value()) {
+                            if (Value->StatementType.mType == VarType.mType) {
+                                mVariables[VarName->mText].VariableValue = Value->StatementName;
+                                return true;
+                            } else {
+                                std::cerr << "Veuillez donner une valeur en rapport avec le type de la variable." << std::endl;
+                            }
+                        } else {
+                            std::cerr << "Veuillez preciser la nouvelle valeur de la variable." << std::endl;
+                        }
+                    } else {
+                        std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                    }
+                } else {
+                    std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur à la variable." << std::endl;
+                }
+            } else {
+                std::cerr << "Cette variable n'existe pas." << std::endl;
+            }
+        } else {
+            std::cerr << "Vous devez spécifier le nom de votre variable." << std::endl;
         }
         return false;
     }
@@ -158,9 +192,11 @@ namespace FPL {
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
             if (PeutEtreInstruction->mText == "envoyer") {
-                if (PrintInstruction(parseStart)) {return true;} else {return false;}
+                if (PrintInstruction(parseStart)) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "variable") {
-                if (VariableInstruction(parseStart)) { return true; } else {return false;}
+                if (VariableInstruction(parseStart)) { return true; } else { return false; }
+            } else if (PeutEtreInstruction->mText == "changer") {
+                if (ChangerInstruction(parseStart)) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "definir") {
                 if (FunctionChecker(parseStart)) {return true;} else {return false;}
             } else{
