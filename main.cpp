@@ -11,24 +11,12 @@ int main() {
     std::cout << std::endl;
 
     std::ifstream file { fileName};
-    std::ifstream file2 {"../" + fileName};
-    if (!file && !file2) { std::cerr << "Fichier introuvable." << std::endl; return 1; }
-
-    if (!file2) {
-        std::string f_content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
-        FPL::TokenBuilding t;
-        std::vector<FPL::Token> tokens = t.parseToken(f_content);
-        FPL::Parser parser;
-        parser.parse(tokens);
-        parser.DebugPrint();
-    } else if (!file) {
-        std::string f_content((std::istreambuf_iterator<char>(file2)), (std::istreambuf_iterator<char>()));
-        FPL::TokenBuilding t;
-        std::vector<FPL::Token> tokens = t.parseToken(f_content);
-        FPL::Parser parser;
-        parser.parse(tokens);
-        parser.DebugPrint();
-    }
+    std::string f_content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+    FPL::TokenBuilding t;
+    std::vector<FPL::Token> tokens = t.parseToken(f_content);
+    FPL::Parser parser;
+    parser.parse(tokens);
+    parser.DebugPrint();
 
     char c;
     std::cin >> c;
