@@ -114,13 +114,18 @@ namespace FPL {
                             if (PossibleVariable.has_value()) {
                                 if (isVariable(PossibleVariable->mText)) {
                                     if (CheckerOperateur(";").has_value()) {
-                                        VariableDefinition variable;
-                                        variable.VariableName = VarName->mText;
-                                        variable.VariableType = Type(VarType->mName, VarType->mType);
-                                        variable.VariableValue = mVariables[PossibleVariable->mText].VariableValue;
+                                        auto OldVariable = mVariables[PossibleVariable->mText];
+                                        if (OldVariable.VariableType.mType == VarType->mType) {
+                                            VariableDefinition variable;
+                                            variable.VariableName = VarName->mText;
+                                            variable.VariableType = Type(VarType->mName, VarType->mType);
+                                            variable.VariableValue = OldVariable.VariableValue;
 
-                                        mVariables[variable.VariableName] = variable;
-                                        return true;
+                                            mVariables[variable.VariableName] = variable;
+                                            return true;
+                                        } else {
+                                            std::cerr << "Vous devez donner une valeur a la variable qui correspond au type." << std::endl;
+                                        }
                                     } else {
                                         std::cerr << "Merci de signifier la fin de la déclaration de la variable avec '|'." << std::endl;
                                     }
