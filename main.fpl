@@ -1,16 +1,5 @@
-variable entier a -> 1000 |
-variable entier b -> 100 |
-
-variable decimal c -> 1.5 |
-
-envoyer "Yo la compagnie."
-
-envoyer "Yo la compagnie 2."
-
-envoyer c <-
-
-changer a -> 1
-
-envoyer a <-
-
-envoyer "Yo la compagnie 4."
+variable entier a -> 5;
+envoyer a;
+changer a -> 10;
+envoyer a;
+variable entier b -> a;
