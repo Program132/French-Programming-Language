@@ -94,7 +94,7 @@ namespace FPL {
                         auto VarValue = CheckerValue();
                         if (VarValue.has_value()) {
                             if (VarValue->StatementType.mType == VarType->mType) {
-                                if (CheckerOperateur("|")) {
+                                if (CheckerOperateur(";")) {
                                     VariableDefinition variable;
                                     variable.VariableName = VarName->mText;
                                     variable.VariableType = Type(VarType->mName, VarType->mType);
@@ -107,6 +107,24 @@ namespace FPL {
                                 }
                             } else {
                                 std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
+                            }
+                        } else if (CheckerIdentifiant().has_value()) {
+                            --mCurrentToken;
+                            auto PossibleVariable = CheckerIdentifiant();
+                            if (PossibleVariable.has_value()) {
+                                if (isVariable(PossibleVariable->mText)) {
+                                    if (CheckerOperateur(";").has_value()) {
+                                        VariableDefinition variable;
+                                        variable.VariableName = VarName->mText;
+                                        variable.VariableType = Type(VarType->mName, VarType->mType);
+                                        variable.VariableValue = mVariables[PossibleVariable->mText].VariableValue;
+
+                                        mVariables[variable.VariableName] = variable;
+                                        return true;
+                                    } else {
+                                        std::cerr << "Merci de signifier la fin de la déclaration de la variable avec '|'." << std::endl;
+                                    }
+                                }
                             }
                         } else {
                             std::cerr << "Vous devez donner une valeur a la variable qui correspond au type." << std::endl;
@@ -134,8 +152,12 @@ namespace FPL {
                         auto Value = CheckerValue();
                         if (Value.has_value()) {
                             if (Value->StatementType.mType == VarType.mType) {
-                                mVariables[VarName->mText].VariableValue = Value->StatementName;
-                                return true;
+                                if (CheckerOperateur(";").has_value()) {
+                                    mVariables[VarName->mText].VariableValue = Value->StatementName;
+                                    return true;
+                                } else {
+                                    std::cerr << "Vous devez mettre le symbole ';' pour mettre fin à l'instruction." << std::endl;
+                                }
                             } else {
                                 std::cerr << "Veuillez donner une valeur en rapport avec le type de la variable." << std::endl;
                             }
@@ -160,26 +182,29 @@ namespace FPL {
     bool Parser::PrintInstruction(auto parseStart) {
         auto Value = CheckerValue();
         if (Value.has_value()) {
-            if (Value->StatementType.mType == STRING) {
-                std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
+            if (CheckerOperateur(";").has_value()) {
+                if (Value->StatementType.mType == STRING) {
+                    std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
+                }
+                std::cout << Value->StatementName << std::endl;
+                return true;
+            } else {
+                std::cerr << "Vous devez mettre le symbole ';' pour mettre fin à l'instruction." << std::endl;
             }
-            std::cout << Value->StatementName << std::endl;
-            return true;
         } else {
             mCurrentToken = parseStart;
             ++mCurrentToken;
             auto value = CheckerIdentifiant();
             if (value.has_value()) {
-                if (CheckerOperateur("<").has_value()) {
-                    if (CheckerOperateur("-").has_value()) {
-                        if (isVariable(value->mText)) {
-                            std::cout << mVariables[value->mText].VariableValue << std::endl;
-                            return true;
-                        } else {
-                            mCurrentToken = parseStart;
-                            std::cerr << "La variable n'existe pas." << std::endl;
-                        }
+                if (isVariable(value->mText)) {
+                    if (CheckerOperateur(";").has_value()) {
+                        std::cout << mVariables[value->mText].VariableValue << std::endl;
+                        return true;
+                    } else {
+                        std::cerr << "Vous devez mettre le symbole ';' pour mettre fin à l'instruction." << std::endl;
                     }
+                } else {
+                    std::cerr << "La variable n'existe pas." << std::endl;
                 }
             }
             std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer (variable) <-" << std::endl;
@@ -287,6 +312,12 @@ namespace FPL {
         return res;
     }
 
+    bool Parser::isVariable(std::string &name) {
+        if (mVariables.contains(name)) {
+            return true;
+        }
+        return false;
+    }
 
     void Parser::DebugPrint() const {
         for (auto &funcPair: mFonctions) {
@@ -294,12 +325,5 @@ namespace FPL {
                 std::cout << e << std::endl;
             }
         }
-    }
-
-    bool Parser::isVariable(std::string &name) {
-        if (mVariables.contains(name)) {
-            return true;
-        }
-        return false;
     }
 }
