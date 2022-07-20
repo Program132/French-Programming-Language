@@ -6,54 +6,91 @@ namespace FPL {
         mTypes["entier"] = Type("entier", INT);
         mTypes["decimal"] = Type("decimal", DOUBLE);
         mTypes["texte"] = Type("texte", STRING);
+        mTypes["auto"] = Type("auto", AUTO);
     }
 
-    bool Parser::FunctionChecker(auto parseStart) {
+    bool Parser::AppelerInstruction(auto parseStart) {
+        auto PossibleFonctionName = CheckerIdentifiant();
+        if (PossibleFonctionName.has_value()) {
+            if (CheckerOperateur(";").has_value()) {
+                if (isFonction(PossibleFonctionName->mText)) {
+                    FonctionDefinition fonction = mFonctions[PossibleFonctionName->mText];
+                    auto contentFonction = fonction.FonctionContent;
+                    std::string finalContent;
+                    for (auto a : contentFonction) {
+                        finalContent += a += " ";
+                    }
+                    TokenBuilding t;
+                    std::vector<Token> tokens = t.parseToken(finalContent);
+                    auto FEndToken = tokens.end();
+                    auto FCurrToken = tokens.begin();
+
+                    while (FCurrToken != FEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
+                        if (ManagerInstruction(FCurrToken)) {
+
+                        } else {
+                            if (FCurrToken->mText.empty()) {
+                                ++FCurrToken;
+                                continue;
+                            }
+
+                            std::cerr << "Identifier inconnu : " << FCurrToken->mText << std::endl;
+                            ++FCurrToken;
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool Parser::FonctionInstruction(auto parseStart) {
         auto PeutEtreNom = CheckerIdentifiant();
         if (PeutEtreNom.has_value()) {
-            // On a le nom d'une fonction.
             if (CheckerOperateur("(").has_value()) {
-                //On a surement une fonction finie !
-
                 FonctionDefinition fonction;
                 fonction.FonctionName = PeutEtreNom->mText;
-
-                while (CheckerOperateur(")") == std::nullopt) {
+                while (!CheckerOperateur(")").has_value()) {
                     auto type = CheckerType();
 
-                    // Si aucun paramètre ou l'utilisateur a utilisé l'argument 'vide' ou juste fermer.
-                    if (type->mType == VOID) { break; }
+                    if (type->mType == VOID) { // Si aucun paramètre ou l'utilisateur a utilisé l'argument 'vide' ou juste fermer.
+                        if (CheckerOperateur(")").has_value()) {
+                            break;
+                        } else {
+                            std::cerr << "Vous devez fermer les parentheses de la fonction." << std::endl;
+                        }
+                    }
 
-                    if (!type.has_value() || type == std::nullopt) {
-                        throw std::runtime_error("Vous devez spécifier un type d'argument.");
+                    if (!type.has_value()) {
+                        std::cerr << "Vous devez spécifier un type d'argument." << std::endl;
                     }
 
                     // Ajout de l'argument...
-                    auto variableName = CheckerIdentifiant();
-                    if (!variableName.has_value()) {
-                        throw std::runtime_error("Vous devez spécifier un nom unique à l'argument.");
+                    auto possibleArg = CheckerIdentifiant();
+                    if (!possibleArg.has_value()) {
+                        std::cerr << "Vous devez spécifier un nom unique à l'argument." << std::endl;
                     }
                     ArgumentDefinition param;
                     param.ArgType.mName = type->mName;
                     param.ArgType.mType = type->mType;
-                    param.ArgName = variableName->mText;
+                    param.ArgName = possibleArg->mText;
                     fonction.ArgsFonction.push_back(param);
 
                     if (CheckerOperateur(")").has_value()) {
                         break;
                     }
                     if (!CheckerOperateur(",").has_value()) {
-                        throw std::runtime_error(
-                                "Vous devez utiliser la ',' pour separer les arguments de la fonction.");
+                        std::cerr << "Vous devez utiliser la ',' pour separer les arguments de la fonction." << std::endl;
                     }
                 }
 
-                mFonctions[fonction.FonctionName] = fonction;
-
                 // On récupère le code entre les {} :
-
                 if (CheckerOperateur("{")) {
                     while (!CheckerOperateur("}").has_value()) {
+                        if (mCurrentToken->mType == CHAINE_LITERAL) {
+                            mCurrentToken->mText += "\"";
+                        }
                         fonction.FonctionContent.push_back(mCurrentToken->mText);
                         ++mCurrentToken;
 
@@ -61,9 +98,9 @@ namespace FPL {
                             break;
                         }
                     }
-
                 }
 
+                mFonctions[fonction.FonctionName] = fonction;
                 return true;
             } else {
                 mCurrentToken = parseStart;
@@ -100,7 +137,6 @@ namespace FPL {
                                         if (VarValue->StatementType.mType == STRING) {
                                             std::replace(VarValue->StatementName.begin(), VarValue->StatementName.end(), '"', ' ');
                                         }
-                                        std::cout << VarValue->StatementName << std::endl;
                                         if (VarType->mType == INT) {
                                             int v;
                                             std::cin >> v;
@@ -191,8 +227,23 @@ namespace FPL {
                         if (CheckerOperateur(">").has_value()) {
                             auto VarValue = CheckerValue();
                             if (VarValue.has_value()) {
+                                if (VarType->mType == AUTO) {
+                                    if (CheckerOperateur(";").has_value()) {
+                                        VariableDefinition variable;
+                                        variable.VariableName = VarName->mText;
+                                        variable.VariableType = Type(VarValue->StatementType.mName, VarValue->StatementType.mType);
+                                        variable.VariableValue = VarValue->StatementName;
+
+                                        mVariables[variable.VariableName] = variable;
+
+                                        return true;
+                                    } else {
+                                        std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
+                                    }
+                                }
+
                                 if (VarValue->StatementType.mType == VarType->mType) {
-                                    if (CheckerOperateur(";")) {
+                                    if (CheckerOperateur(";").has_value()) {
                                         VariableDefinition variable;
                                         variable.VariableName = VarName->mText;
                                         variable.VariableType = Type(VarType->mName, VarType->mType);
@@ -201,7 +252,7 @@ namespace FPL {
                                         mVariables[variable.VariableName] = variable;
                                         return true;
                                     } else {
-                                        std::cerr << "Merci de signifier la fin de la déclaration de la variable avec ';'." << std::endl;
+                                        std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
                                     }
                                 } else {
                                     std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
@@ -289,15 +340,23 @@ namespace FPL {
             --mCurrentToken;
             while (!CheckerOperateur(";").has_value()) {
                 auto Value = CheckerValue();
-                if (Value->StatementType.mType == STRING) {
-                    std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
-                }
+                if (Value.has_value()) {
+                    if (Value->StatementType.mType == STRING) {
+                        std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
+                    }
 
-                if (CheckerOperateur("[").has_value()) {
+                    std::cout << Value->StatementName;
+                    std::cout << " ";
+                }
+                else if (CheckerOperateur("[").has_value()) {
                     auto var = CheckerIdentifiant();
                     if (isVariable(var->mText)) {
                         if (CheckerOperateur("]").has_value()) {
-                            std::cout << mVariables[var->mText].VariableValue;
+                            auto finalMsg = mVariables[var->mText].VariableValue;
+                            if (mVariables[var->mText].VariableType.mType == STRING) {
+                                std::replace(finalMsg.begin(), finalMsg.end(), '"', ' ');
+                            }
+                            std::cout << finalMsg;
                             std::cout << " ";
                         } else{
                             std::cerr << "Ces operateurs sont utilises dans cette instruction pour introduire une variable, merci de cloturer l'insertion avec ']'." << std::endl;
@@ -307,9 +366,6 @@ namespace FPL {
                         std::cerr << "La variable n'existe pas." << std::endl;
                     }
                 }
-
-                std::cout << Value->StatementName;
-                std::cout << " ";
 
                 if (CheckerOperateur(";").has_value()) {
                     break;
@@ -333,13 +389,13 @@ namespace FPL {
                     std::cerr << "La variable n'existe pas." << std::endl;
                 }
             }
-            std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer (variable) <-" << std::endl;
+            std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer [variable];" << std::endl;
         }
         return false;
     }
 
-    bool Parser::ManagerInstruction() {
-        auto parseStart = mCurrentToken; // std::vector<Token>::iterator
+    bool Parser::ManagerInstruction(auto& token) {
+        auto parseStart = token; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
             if (PeutEtreInstruction->mText == "envoyer") {
@@ -349,9 +405,11 @@ namespace FPL {
             } else if (PeutEtreInstruction->mText == "changer") {
                 if (ChangerInstruction()) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "definir") {
-                if (FunctionChecker(parseStart)) {return true;} else {return false;}
-            } else{
-                mCurrentToken = parseStart;
+                if (FonctionInstruction(parseStart)) {return true;} else {return false;}
+            } else if (PeutEtreInstruction->mText == "appeler") {
+                if (AppelerInstruction(parseStart)) { return true; } else {return false;}
+            } else {
+                token = parseStart;
             }
             return false;
         }
@@ -365,10 +423,11 @@ namespace FPL {
         mCurrentToken = tokens.begin();
 
         while (mCurrentToken != mEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
-            if (ManagerInstruction()) {
+            if (ManagerInstruction(mCurrentToken)) {
 
             } else {
                 if (mCurrentToken->mText.empty()) {
+                    ++mCurrentToken;
                     continue;
                 }
 
@@ -383,6 +442,7 @@ namespace FPL {
         if (mCurrentToken->mType != IDENTIFIANT) { return std::nullopt; }
         if (mCurrentToken->mText != name && !name.empty()) { return std::nullopt; }
 
+        std::cout << "1: " << mCurrentToken->mText << std::endl;
         auto returnToken = mCurrentToken;
         ++mCurrentToken;
         return *returnToken;
@@ -439,13 +499,16 @@ namespace FPL {
     }
 
     bool Parser::isVariable(std::string &name) {
-        if (mVariables.contains(name)) {
-            return true;
-        }
+        if (mVariables.contains(name)) { return true; }
         return false;
     }
 
-    void Parser::DebugPrint() const {
+    bool Parser::isFonction(std::string &name) {
+        if (mFonctions.contains(name)) { return true; }
+        return false;
+    }
+
+    [[maybe_unused]] void Parser::DebugPrint() const {
         for (auto &funcPair: mFonctions) {
             for (auto &e: funcPair.second.FonctionContent) {
                 std::cout << e << std::endl;
