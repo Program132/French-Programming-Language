@@ -17,8 +17,5 @@ int main() {
     FPL::Parser parser;
     parser.parse(tokens);
     parser.DebugPrint();
-
-    char c;
-    std::cin >> c;
     return 0;
 }
