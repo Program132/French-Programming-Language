@@ -1,6 +1,2 @@
-variable entier a -> 5;
-envoyer a;
-changer a -> 10;
-envoyer a;
-variable decimal b -> a;
-envoyer b;
+variable entier a -> 4;
+envoyer "Yo" 10 5.5 [a];
