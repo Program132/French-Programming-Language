@@ -9,35 +9,24 @@ namespace FPL {
         mTypes["auto"] = Type("auto", AUTO);
     }
 
-    bool Parser::AppelerInstruction(auto parseStart) {
+    bool Parser::AppelerInstruction() {
         auto PossibleFonctionName = CheckerIdentifiant();
         if (PossibleFonctionName.has_value()) {
             if (CheckerOperateur(";").has_value()) {
                 if (isFonction(PossibleFonctionName->mText)) {
                     FonctionDefinition fonction = mFonctions[PossibleFonctionName->mText];
-                    auto contentFonction = fonction.FonctionContent;
                     std::string finalContent;
-                    for (auto a : contentFonction) {
+                    for (auto a : fonction.FonctionContent) {
                         finalContent += a += " ";
                     }
+                    std::cout << "IGNORE (" << finalContent << ")" << std::endl;
                     TokenBuilding t;
                     std::vector<Token> tokens = t.parseToken(finalContent);
-                    auto FEndToken = tokens.end();
                     auto FCurrToken = tokens.begin();
-
-                    while (FCurrToken != FEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
-                        if (ManagerInstruction(FCurrToken)) {
-
-                        } else {
-                            if (FCurrToken->mText.empty()) {
-                                ++FCurrToken;
-                                continue;
-                            }
-
-                            std::cerr << "Identifier inconnu : " << FCurrToken->mText << std::endl;
-                            ++FCurrToken;
-                        }
-                    }
+                    auto oldCurrentToken = mCurrentToken;
+                    mCurrentToken = FCurrToken;
+                    parse(tokens);
+                    mCurrentToken = oldCurrentToken;
                     return true;
                 }
             }
@@ -389,13 +378,13 @@ namespace FPL {
                     std::cerr << "La variable n'existe pas." << std::endl;
                 }
             }
-            std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caractères ou le nom de votre variable sous ce format : 'envoyer [variable];" << std::endl;
+            std::cerr << "Vous devez ouvrir les guillemets pour transmettre une chaine de caracteres ou le nom de votre variable sous ce format : 'envoyer [variable];'." << std::endl;
         }
         return false;
     }
 
-    bool Parser::ManagerInstruction(auto& token) {
-        auto parseStart = token; // std::vector<Token>::iterator
+    bool Parser::ManagerInstruction() {
+        auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
             if (PeutEtreInstruction->mText == "envoyer") {
@@ -407,9 +396,9 @@ namespace FPL {
             } else if (PeutEtreInstruction->mText == "definir") {
                 if (FonctionInstruction(parseStart)) {return true;} else {return false;}
             } else if (PeutEtreInstruction->mText == "appeler") {
-                if (AppelerInstruction(parseStart)) { return true; } else {return false;}
+               if (AppelerInstruction()) { return true; } else {return false;}
             } else {
-                token = parseStart;
+                mCurrentToken = parseStart;
             }
             return false;
         }
@@ -423,7 +412,7 @@ namespace FPL {
         mCurrentToken = tokens.begin();
 
         while (mCurrentToken != mEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
-            if (ManagerInstruction(mCurrentToken)) {
+            if (ManagerInstruction()) {
 
             } else {
                 if (mCurrentToken->mText.empty()) {
@@ -440,9 +429,8 @@ namespace FPL {
     std::optional<Token> Parser::CheckerIdentifiant(std::string_view name) {
         if (mCurrentToken == mEndToken) { return std::nullopt; }
         if (mCurrentToken->mType != IDENTIFIANT) { return std::nullopt; }
-        if (mCurrentToken->mText != name && !name.empty()) { return std::nullopt; }
+        if (!name.empty() && mCurrentToken->mText != name) { return std::nullopt; }
 
-        std::cout << "1: " << mCurrentToken->mText << std::endl;
         auto returnToken = mCurrentToken;
         ++mCurrentToken;
         return *returnToken;

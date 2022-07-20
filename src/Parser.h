@@ -43,13 +43,13 @@ namespace FPL {
 
         // Fonctions :
         bool FonctionInstruction(auto parseStart);
-        bool AppelerInstruction(auto parseStart);
+        bool AppelerInstruction();
         bool isFonction(std::string &name);
         std::map<std::string, FonctionDefinition> mFonctions;
 
 
         // Utils :
-        bool ManagerInstruction(auto& token);
+        bool ManagerInstruction();
         std::vector<Token>::iterator mCurrentToken;
         std::vector<Token>::iterator mEndToken;
         std::map<std::string, Type> mTypes;
