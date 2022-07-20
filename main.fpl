@@ -1,2 +1,5 @@
-variable entier a -> 4;
-envoyer "Yo" 10 5.5 [a];
+definir principal(vide) {
+    envoyer "yo";
+}
+
+appeler principal;
