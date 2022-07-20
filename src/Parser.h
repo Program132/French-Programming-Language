@@ -32,13 +32,13 @@ namespace FPL {
         std::optional<Statement> CheckerValue();
 
 
-        // Print : In the ManagerInstruction
+        // Print :
+        bool PrintInstruction(auto parseStart);
 
         // Variable :
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name);
-        bool VariableInstruction(auto parseStart);
-        bool PrintInstruction(auto parseStart);
+        bool VariableInstruction();
 
         // Fonctions :
         bool FunctionChecker(auto parseStart);
@@ -52,6 +52,6 @@ namespace FPL {
 
         bool ManagerInstruction();
 
-        bool ChangerInstruction(auto parseStart);
+        bool ChangerInstruction();
     };
 }
