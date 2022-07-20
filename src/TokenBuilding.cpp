@@ -81,6 +81,8 @@ namespace FPL {
                 case '}':
                 case '(':
                 case ')':
+                case '[':
+                case ']':
                 case '=':
                 case '+':
                 case '-':
