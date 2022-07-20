@@ -1,5 +1,6 @@
 definir principal(vide) {
     envoyer "yo";
+    envoyer "salut la compagnie";
 }
-
 appeler principal;
+envoyer "Salut";
