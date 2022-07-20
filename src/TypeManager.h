@@ -7,7 +7,8 @@ namespace FPL {
         VOID,
         INT,
         DOUBLE,
-        STRING
+        STRING,
+        AUTO
         // STRUCT -> pour l'oo
     };
 
