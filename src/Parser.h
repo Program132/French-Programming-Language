@@ -22,7 +22,7 @@ namespace FPL {
 
         void parse(std::vector<Token> &tokens);
 
-        void DebugPrint() const;
+        [[maybe_unused]] void DebugPrint() const;
 
     private:
         // Essentielles:
@@ -39,19 +39,19 @@ namespace FPL {
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name);
         bool VariableInstruction();
+        bool ChangerInstruction();
 
         // Fonctions :
-        bool FunctionChecker(auto parseStart);
+        bool FonctionInstruction(auto parseStart);
+        bool AppelerInstruction(auto parseStart);
+        bool isFonction(std::string &name);
         std::map<std::string, FonctionDefinition> mFonctions;
 
 
         // Utils :
+        bool ManagerInstruction(auto& token);
         std::vector<Token>::iterator mCurrentToken;
         std::vector<Token>::iterator mEndToken;
         std::map<std::string, Type> mTypes;
-
-        bool ManagerInstruction();
-
-        bool ChangerInstruction();
     };
 }
