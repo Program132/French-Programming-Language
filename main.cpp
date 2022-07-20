@@ -16,6 +16,6 @@ int main() {
     std::vector<FPL::Token> tokens = t.parseToken(f_content);
     FPL::Parser parser;
     parser.parse(tokens);
-    parser.DebugPrint();
+    //parser.DebugPrint();
     return 0;
 }
