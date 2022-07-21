@@ -1,7 +1,7 @@
 #include "FonctionDefinition.h"
 
 namespace FPL {
-    void FonctionDefinition::FDebugPrint() const {
+    [[maybe_unused]] void FonctionDefinition::FDebugPrint() const {
         std::cout << FonctionName << "(" << std::endl;
         for (ArgumentDefinition arg : ArgsFonction) {
             arg.ADebugPrint();
