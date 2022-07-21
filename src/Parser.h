@@ -37,14 +37,14 @@ namespace FPL {
 
         // Variable :
         std::map<std::string, VariableDefinition> mVariables;
-        bool isVariable(std::string &name);
+        bool isVariable(std::string &name) const;
         bool VariableInstruction();
         bool ChangerInstruction();
 
         // Fonctions :
         bool FonctionInstruction(auto parseStart);
         bool AppelerInstruction();
-        bool isFonction(std::string &name);
+        bool isFonction(std::string &name) const;
         std::map<std::string, FonctionDefinition> mFonctions;
 
 
