@@ -1,6 +1,5 @@
-definir principal(vide) {
+definir principal(texte msg, auto a) {
     envoyer "yo";
     envoyer "salut la compagnie";
 }
-appeler principal;
-envoyer "Salut";
+appeler principal : msg "Yo", a 5;

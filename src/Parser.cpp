@@ -12,26 +12,61 @@ namespace FPL {
     bool Parser::AppelerInstruction() {
         auto PossibleFonctionName = CheckerIdentifiant();
         if (PossibleFonctionName.has_value()) {
-            if (CheckerOperateur(";").has_value()) {
-                if (isFonction(PossibleFonctionName->mText)) {
-                    FonctionDefinition const fonction = mFonctions[PossibleFonctionName->mText];
-                    if (!fonction.FonctionContent.empty()) {
-                        std::string finalContent;
-                        for (auto const &a : fonction.FonctionContent) {
-                            finalContent.append(a).append(" ");
+            if (isFonction(PossibleFonctionName->mText)) {
+                FonctionDefinition fonction = mFonctions[PossibleFonctionName->mText];
+                if (fonction.HasArgument) {
+                    if (CheckerOperateur(":").has_value()) {
+                        while (fonction.NumberArgument > 0) {
+                            auto name = CheckerIdentifiant();
+                            if (!name.has_value()) {
+                                std::cerr << "Veuillez specifier le nom du parametre." << std::endl;
+                            }
+
+                            if (!isFonctionArgument(PossibleFonctionName->mText, name->mText)) {
+                                std::cerr << "Ce parametre n'existe pas dans la fonction " << PossibleFonctionName->mText << "." << std::endl;
+                            }
+
+                            auto value = CheckerValue();
+                            if (!value.has_value()) {
+                                std::cerr << "Veuillez donner une valeur au parametre << " << name->mText << "." << std::endl;
+                            }
+
+                            auto parametre = getArgument(PossibleFonctionName->mText, name->mText);
+                            if (parametre->ArgType.mType == value->StatementType.mType && parametre->ArgType.mType != AUTO) {
+                                parametre->ArgValue = value->StatementName;
+                            } else if (parametre->ArgType.mType == AUTO && parametre->ArgType.mType != value->StatementType.mType) {
+                                parametre->ArgType = Type("auto", AUTO);
+                                parametre->ArgValue = value->StatementName;
+                            } else {
+                                std::cerr << "Le type de votre valeur doit être identique a celui de l'argument." << std::endl;
+                            }
+
+                            if (fonction.NumberArgument > 1 && !CheckerOperateur(",").has_value()) {
+                                std::cerr << "Veuillez separer les different arguments par le symbole ','." << std::endl;
+                            }
+                            fonction.NumberArgument -= 1;
                         }
-                        TokenBuilding t;
-                        std::cout << "" << std::endl; // IGNORE (finalContent) -> sans le print, cela ne marche plus.
-                        std::vector<Token> tokens = t.parseToken(finalContent);
-
-                        auto FCurrToken = tokens.begin();
-                        auto oldCurrentToken = mCurrentToken;
-                        parse(tokens);
-                        mCurrentToken = oldCurrentToken;
-
-                        return true;
+                        if (!CheckerOperateur(";").has_value()) {
+                            std::cerr << "Vous devez mettre le symbole ';' pour mettre fin à l'instruction." << std::endl;
+                        }
+                    } else {
+                        std::cerr << "La fonction a des parametres, vous devez obligatoirement leur donner une valeur." << std::endl;
                     }
-                    return false;
+                }
+                if (!fonction.FonctionContent.empty()) {
+                    std::string finalContent;
+                    for (auto const &a : fonction.FonctionContent) {
+                        finalContent.append(a).append(" ");
+                    }
+                    TokenBuilding t;
+                    std::cout << "" << std::endl; // IGNORE (finalContent) -> sans le print, cela ne marche plus.
+                    std::vector<Token> tokens = t.parseToken(finalContent);
+
+                    auto FCurrToken = tokens.begin();
+                    auto oldCurrentToken = mCurrentToken;
+                    parse(tokens);
+                    mCurrentToken = oldCurrentToken;
+                    return true;
                 }
             }
         }
@@ -68,6 +103,8 @@ namespace FPL {
                     param.ArgType.mName = type->mName;
                     param.ArgType.mType = type->mType;
                     param.ArgName = possibleArg->mText;
+                    fonction.HasArgument = true;
+                    fonction.NumberArgument += 1;
                     fonction.ArgsFonction.push_back(param);
 
                     if (CheckerOperateur(")").has_value()) {
@@ -497,6 +534,39 @@ namespace FPL {
     bool Parser::isFonction(std::string &name) const {
         if (mFonctions.contains(name)) { return true; }
         return false;
+    }
+
+    bool Parser::isFonctionArgument(std::string &fonction, std::string &argument) {
+        if (isFonction(fonction)) {
+            FonctionDefinition f = mFonctions[fonction];
+            if (f.HasArgument) {
+                for (auto const& a : f.ArgsFonction) {
+                    if (a.ArgName == argument) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    std::optional<FonctionDefinition> Parser::getFonction(std::string& fonction) {
+        if (isFonction(fonction)) {
+            return mFonctions[fonction];
+        }
+        return std::nullopt;
+    }
+
+    std::optional<ArgumentDefinition> Parser::getArgument(std::string &fonction, std::string &name) {
+        if (isFonctionArgument(fonction, name)) {
+            auto f = getFonction(fonction);
+            for (auto const &arg : f->ArgsFonction) {
+                if (arg.ArgName == name) {
+                    return arg;
+                }
+            }
+        }
+        return std::nullopt;
     }
 
     [[maybe_unused]] void Parser::DebugPrint() const {
