@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <optional>
 #include <map>
+#include <functional>
 #include <algorithm>
 
 #include "TokenBuilding.h"
@@ -42,10 +43,13 @@ namespace FPL {
         bool ChangerInstruction();
 
         // Fonctions :
+        std::map<std::string, FonctionDefinition> mFonctions;
         bool FonctionInstruction(auto parseStart);
         bool AppelerInstruction();
         bool isFonction(std::string &name) const;
-        std::map<std::string, FonctionDefinition> mFonctions;
+        bool isFonctionArgument(std::string &fonction, std::string &argument);
+        std::optional<FonctionDefinition> getFonction(std::string &fonction);
+        std::optional<ArgumentDefinition> getArgument(std::string &fonction, std::string &name);
 
 
         // Utils :
