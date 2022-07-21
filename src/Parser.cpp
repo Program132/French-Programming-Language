@@ -14,20 +14,24 @@ namespace FPL {
         if (PossibleFonctionName.has_value()) {
             if (CheckerOperateur(";").has_value()) {
                 if (isFonction(PossibleFonctionName->mText)) {
-                    FonctionDefinition fonction = mFonctions[PossibleFonctionName->mText];
-                    std::string finalContent;
-                    for (auto a : fonction.FonctionContent) {
-                        finalContent += a += " ";
+                    FonctionDefinition const fonction = mFonctions[PossibleFonctionName->mText];
+                    if (!fonction.FonctionContent.empty()) {
+                        std::string finalContent;
+                        for (auto const &a : fonction.FonctionContent) {
+                            finalContent.append(a).append(" ");
+                        }
+                        TokenBuilding t;
+                        std::cout << "" << std::endl; // IGNORE (finalContent) -> sans le print, cela ne marche plus.
+                        std::vector<Token> tokens = t.parseToken(finalContent);
+
+                        auto FCurrToken = tokens.begin();
+                        auto oldCurrentToken = mCurrentToken;
+                        parse(tokens);
+                        mCurrentToken = oldCurrentToken;
+
+                        return true;
                     }
-                    std::cout << "IGNORE (" << finalContent << ")" << std::endl;
-                    TokenBuilding t;
-                    std::vector<Token> tokens = t.parseToken(finalContent);
-                    auto FCurrToken = tokens.begin();
-                    auto oldCurrentToken = mCurrentToken;
-                    mCurrentToken = FCurrToken;
-                    parse(tokens);
-                    mCurrentToken = oldCurrentToken;
-                    return true;
+                    return false;
                 }
             }
         }
@@ -328,7 +332,7 @@ namespace FPL {
         if (Value.has_value()) {
             --mCurrentToken;
             while (!CheckerOperateur(";").has_value()) {
-                auto Value = CheckerValue();
+                Value = CheckerValue();
                 if (Value.has_value()) {
                     if (Value->StatementType.mType == STRING) {
                         std::replace(Value->StatementName.begin(), Value->StatementName.end(), '"', ' ');
@@ -415,8 +419,7 @@ namespace FPL {
             if (ManagerInstruction()) {
 
             } else {
-                if (mCurrentToken->mText.empty()) {
-                    ++mCurrentToken;
+                if (mCurrentToken->mText.empty() || mCurrentToken->mType == ESPACEVIDE ) {
                     continue;
                 }
 
@@ -486,12 +489,12 @@ namespace FPL {
         return res;
     }
 
-    bool Parser::isVariable(std::string &name) {
+    bool Parser::isVariable(std::string &name) const {
         if (mVariables.contains(name)) { return true; }
         return false;
     }
 
-    bool Parser::isFonction(std::string &name) {
+    bool Parser::isFonction(std::string &name) const {
         if (mFonctions.contains(name)) { return true; }
         return false;
     }
