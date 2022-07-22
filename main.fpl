@@ -1,8 +1,5 @@
 definir n(entier a) {
-    variable entier b -> a;
-    envoyer b;
-    variable decimal c -> a;
-    envoyer c;
+    envoyer "Yo j'ai eu" [a] "en math... mais toi tu as eu" 10 "roh !";
 }
 
 appeler n : a 5;
