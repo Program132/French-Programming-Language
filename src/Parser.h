@@ -21,7 +21,7 @@ namespace FPL {
     public:
         Parser();
 
-        void parse(std::vector<Token> &tokens, std::optional<std::string> argument);
+        void parse(std::vector<Token> &tokens, std::optional<FonctionDefinition>& fonction);
 
         [[maybe_unused]] void DebugPrint() const;
 
@@ -34,26 +34,28 @@ namespace FPL {
 
 
         // Print :
-        bool PrintInstruction(auto parseStart);
+        bool PrintInstruction(auto parseStart, std::optional<FonctionDefinition>& fonction);
 
         // Variable :
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name) const;
-        bool VariableInstruction(std::optional<std::string> argument);
+        bool VariableInstruction(std::optional<FonctionDefinition>& fonction);
         bool ChangerInstruction();
 
         // Fonctions :
         std::map<std::string, FonctionDefinition> mFonctions;
+        std::map<std::string, ArgumentDefinition> mArguments;
         bool FonctionInstruction(auto parseStart);
         bool AppelerInstruction();
         bool isFonction(std::string &name) const;
         bool isFonctionArgument(std::string &fonction, std::string &argument);
+        bool isArgument(std::string &name) const;
         std::optional<FonctionDefinition> getFonction(std::string &fonction);
         std::optional<ArgumentDefinition> getArgument(std::string &fonction, std::string &name);
 
 
         // Utils :
-        bool ManagerInstruction(std::optional<std::string> argument);
+        bool ManagerInstruction(std::optional<FonctionDefinition>& fonction);
         std::vector<Token>::iterator mCurrentToken;
         std::vector<Token>::iterator mEndToken;
         std::map<std::string, Type> mTypes;
