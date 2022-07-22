@@ -1,5 +1,6 @@
 #include "src/TokenBuilding.h"
 #include "src/Parser.h"
+#include "src/FonctionDefinition.h"
 #include <iostream>
 #include <string>
 #include <optional>
@@ -16,6 +17,6 @@ int main() {
     FPL::TokenBuilding t;
     std::vector<FPL::Token> tokens = t.parseToken(f_content);
     FPL::Parser parser;
-    parser.parse(tokens, std::nullopt);
+    parser.parse(tokens, (std::optional<FPL::FonctionDefinition> &) std::nullopt);
     return 0;
 }
