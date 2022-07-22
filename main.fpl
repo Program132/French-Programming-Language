@@ -1,5 +1,6 @@
 definir principal(texte msg, auto a) {
-    envoyer "yo";
-    envoyer "salut la compagnie";
+    envoyer msg;
 }
+
 appeler principal : msg "Yo", a 5;
+envoyer msg;
