@@ -36,5 +36,7 @@ namespace FPL {
         std::string VariableName;
         Type VariableType;
         std::string VariableValue;
+        bool InFonction;
+        bool IsGlobal;
     };
 }
