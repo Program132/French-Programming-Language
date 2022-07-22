@@ -2,6 +2,7 @@
 #include "src/Parser.h"
 #include <iostream>
 #include <string>
+#include <optional>
 #include <fstream>
 
 int main() {
@@ -15,7 +16,6 @@ int main() {
     FPL::TokenBuilding t;
     std::vector<FPL::Token> tokens = t.parseToken(f_content);
     FPL::Parser parser;
-    parser.parse(tokens);
-    //parser.DebugPrint();
+    parser.parse(tokens, std::nullopt);
     return 0;
 }

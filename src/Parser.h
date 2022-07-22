@@ -21,7 +21,7 @@ namespace FPL {
     public:
         Parser();
 
-        void parse(std::vector<Token> &tokens);
+        void parse(std::vector<Token> &tokens, std::optional<std::string> argument);
 
         [[maybe_unused]] void DebugPrint() const;
 
@@ -39,7 +39,7 @@ namespace FPL {
         // Variable :
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name) const;
-        bool VariableInstruction();
+        bool VariableInstruction(std::optional<std::string> argument);
         bool ChangerInstruction();
 
         // Fonctions :
@@ -53,7 +53,7 @@ namespace FPL {
 
 
         // Utils :
-        bool ManagerInstruction();
+        bool ManagerInstruction(std::optional<std::string> argument);
         std::vector<Token>::iterator mCurrentToken;
         std::vector<Token>::iterator mEndToken;
         std::map<std::string, Type> mTypes;
