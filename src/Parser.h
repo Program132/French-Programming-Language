@@ -40,16 +40,16 @@ namespace FPL {
         std::map<std::string, VariableDefinition> mVariables;
         bool isVariable(std::string &name) const;
         bool VariableInstruction(std::optional<FonctionDefinition>& fonction);
-        bool ChangerInstruction();
+        bool ChangerInstruction(std::optional<FonctionDefinition>& fonction);
 
         // Fonctions :
         std::map<std::string, FonctionDefinition> mFonctions;
-        std::map<std::string, ArgumentDefinition> mArguments;
+        std::map<std::string, std::map<std::string, ArgumentDefinition>> mArguments;
         bool FonctionInstruction(auto parseStart);
         bool AppelerInstruction();
         bool isFonction(std::string &name) const;
         bool isFonctionArgument(std::string &fonction, std::string &argument);
-        bool isArgument(std::string &name) const;
+        bool isArgument(std::string& fonction, std::string &name) const;
         std::optional<FonctionDefinition> getFonction(std::string &fonction);
         std::optional<ArgumentDefinition> getArgument(std::string &fonction, std::string &name);
 
