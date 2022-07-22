@@ -1,6 +1,6 @@
-definir principal(texte msg, auto a) {
-    envoyer msg;
+definir n(entier a) {
+    variable entier b -> 10;
+    variable auto globale cc -> a;
 }
 
-appeler principal : msg "Yo", a 5;
-envoyer msg;
+appeler n : a 5;
