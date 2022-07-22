@@ -28,9 +28,14 @@ Depuis que j'utilise leurs outils, je me sens bien et presque mieux je dirais.
 
 ## **Commencer**
 
-CELA EST WIP (Work in progress) :> !
+Pour commencer à apprendre le langage F.P.L, il faut comprendre le fonctionnement des différents 
+[fichiers](https://program-4.gitbook.io/french-programming-language/les-fichiers) fournis dans les _releases_ du projet.
 
-## **Liens utiles + Important**
+Ensuite il faut apprendre les différents [types](https://program-4.gitbook.io/french-programming-language/instructions/les-types) disponibles.
+
+Pour continuer, vous devez suivre l'ordre qui est affiché à votre droite.
+
+## **Liens utiles**
 
 [Code de conduite](CodeOfConduct.md)
 
