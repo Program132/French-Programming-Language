@@ -53,6 +53,7 @@ namespace FPL {
                         std::cerr << "La fonction a des parametres, vous devez obligatoirement leur donner une valeur." << std::endl;
                     }
                 }
+
                 if (!fonction.FonctionContent.empty()) {
                     std::string finalContent;
                     for (auto const &a : fonction.FonctionContent) {
@@ -64,8 +65,19 @@ namespace FPL {
 
                     auto FCurrToken = tokens.begin();
                     auto oldCurrentToken = mCurrentToken;
-                    parse(tokens);
+                    parse(tokens, "fonction");
                     mCurrentToken = oldCurrentToken;
+
+                    std::vector<std::string> toErase;
+                    for(auto var: mVariables) {
+                        if(var.second.InFonction && !var.second.IsGlobal) {
+                            toErase.push_back(var.first);
+                        }
+                    }
+                    for(auto it: toErase)
+                    {
+                        mVariables.erase(it);
+                    }
                     return true;
                 }
             }
@@ -145,7 +157,7 @@ namespace FPL {
         return false;
     }
 
-    bool Parser::VariableInstruction() {
+    bool Parser::VariableInstruction(std::optional<std::string> argument) {
         auto VarType = CheckerType();
         if (VarType.has_value()) {
             auto VarName = CheckerIdentifiant();
@@ -170,107 +182,85 @@ namespace FPL {
                                 if (VarValue.has_value()) {
                                     std::cout << VarValue->StatementName << std::endl;
                                 }
+
                                 if (CheckerOperateur(";").has_value()) {
+                                    VariableDefinition variable;
+                                    variable.VariableName = VarName->mText;
+                                    variable.VariableType = Type(VarType->mName, VarType->mType);
+                                    variable.IsGlobal = false;
+                                    variable.InFonction = false;
+                                    if (argument == "fonction") {
+                                        variable.InFonction = true;
+                                    }
+
                                     if (VarType->mType == INT) {
                                         int v;
                                         std::cin >> v;
-                                        VariableDefinition variable;
-                                        variable.VariableName = VarName->mText;
-                                        variable.VariableType = Type(VarType->mName, VarType->mType);
-                                        variable.IsGlobal = false;
-                                        variable.InFonction = false;
                                         variable.VariableValue = std::to_string(v);
-
                                         mVariables[variable.VariableName] = variable;
-                                        return true;
                                     } else if (VarType->mType == DOUBLE) {
                                         double v;
                                         std::cin >> v;
-                                        VariableDefinition variable;
-                                        variable.VariableName = VarName->mText;
-                                        variable.VariableType = Type(VarType->mName, VarType->mType);
-                                        variable.IsGlobal = false;
-                                        variable.InFonction = false;
                                         variable.VariableValue = std::to_string(v);
-
                                         mVariables[variable.VariableName] = variable;
-                                        return true;
                                     } else if (VarType->mType == STRING) {
-
                                         std::string v;
                                         std::cin >> v;
-                                        VariableDefinition variable;
-                                        variable.VariableName = VarName->mText;
-                                        variable.VariableType = Type(VarType->mName, VarType->mType);
-                                        variable.IsGlobal = false;
-                                        variable.InFonction = false;
                                         variable.VariableValue = v;
-
                                         mVariables[variable.VariableName] = variable;
-                                        return true;
-                                    } else {
-                                        std::cerr << "Le type est inexistant en F.P.L." << std::endl;
                                     }
+                                    return true;
                                 } else {
-                                    std::cerr << "Merci de signifier la fin de la déclaration de la variable avec ';'." << std::endl;
+                                    std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
                                 }
                             } else {
                                 std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur." << std::endl;
                             }
                         } else {
                             if (CheckerOperateur(";").has_value()) {
+                                VariableDefinition variable;
+                                variable.VariableName = VarName->mText;
+                                variable.VariableType = Type(VarType->mName, VarType->mType);
+                                variable.IsGlobal = false;
+                                variable.InFonction = false;
+                                if (argument == "fonction") {
+                                    variable.InFonction = true;
+                                }
+
                                 if (VarType->mType == INT) {
                                     int v;
                                     std::cin >> v;
-                                    VariableDefinition variable;
-                                    variable.VariableName = VarName->mText;
-                                    variable.VariableType = Type(VarType->mName, VarType->mType);
-                                    variable.IsGlobal = false;
-                                    variable.InFonction = false;
                                     variable.VariableValue = std::to_string(v);
 
                                     mVariables[variable.VariableName] = variable;
-                                    return true;
                                 } else if (VarType->mType == DOUBLE) {
                                     double v;
                                     std::cin >> v;
-                                    VariableDefinition variable;
-                                    variable.VariableName = VarName->mText;
-                                    variable.VariableType = Type(VarType->mName, VarType->mType);
-                                    variable.IsGlobal = false;
-                                    variable.InFonction = false;
                                     variable.VariableValue = std::to_string(v);
 
                                     mVariables[variable.VariableName] = variable;
-                                    return true;
                                 } else if (VarType->mType == STRING) {
                                     std::string v;
                                     std::cin >> v;
-                                    VariableDefinition variable;
-                                    variable.VariableName = VarName->mText;
-                                    variable.VariableType = Type(VarType->mName, VarType->mType);
-                                    variable.IsGlobal = false;
-                                    variable.InFonction = false;
                                     variable.VariableValue = v;
-
                                     mVariables[variable.VariableName] = variable;
-                                    return true;
-                                } else {
-                                    std::cerr << "Le type est inexistant en F.P.L." << std::endl;
                                 }
+                                return true;
                             } else {
-                                std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur." << std::endl;
+                                std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
                             }
                         }
                     } else {
                         std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
                     }
-                } else {
-                    if (CheckerOperateur("-").has_value()) {
-                        if (CheckerOperateur(">").has_value()) {
-                            auto VarValue = CheckerValue();
-                            if (VarValue.has_value()) {
-                                if (VarValue->StatementType.mType == VarType->mType) {
+                }
+                else if (VarName->mText == "globale") {
+                    VarName = CheckerIdentifiant();
+                    if (VarName.has_value()) {
+                        if (CheckerOperateur("-").has_value()) {
+                            if (CheckerOperateur(">").has_value()) {
+                                auto VarValue = CheckerValue();
+                                if (VarValue.has_value()) {
                                     if (CheckerOperateur(";").has_value()) {
                                         VariableDefinition variable;
                                         variable.VariableName = VarName->mText;
@@ -279,18 +269,61 @@ namespace FPL {
                                         } else {
                                             variable.VariableType = Type(VarType->mName, VarType->mType);
                                         }
-                                        variable.IsGlobal = false;
+                                        variable.IsGlobal = true;
                                         variable.InFonction = false;
+                                        if (argument == "fonction") {
+                                            variable.InFonction = true;
+                                        }
+                                        if (VarValue->StatementType.mType == STRING) {
+                                            std::replace(VarValue->StatementName.begin(), VarValue->StatementName.end(), '"', ' ');
+                                        }
                                         variable.VariableValue = VarValue->StatementName;
 
                                         mVariables[variable.VariableName] = variable;
 
                                         return true;
-                                    } else {
-                                        std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
                                     }
                                 } else {
-                                    std::cerr << "Vous devez donner une valeur qui est de même type que la variable." << std::endl;
+                                    std::cerr << "Vous devez donner une valeur à votre variable." << std::endl;
+                                }
+                            } else {
+                                std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur." << std::endl;
+                            }
+                        } else {
+                            std::cerr << "Vous devez utiliser les symboles '->' pour donner une valeur." << std::endl;
+                        }
+                    } else {
+                        std::cerr << "Vous devez indiquer un nom à la variable." << std::endl;
+                    }
+                }
+                else {
+                    if (CheckerOperateur("-").has_value()) {
+                        if (CheckerOperateur(">").has_value()) {
+                            auto VarValue = CheckerValue();
+                            if (VarValue.has_value()) {
+                                if (CheckerOperateur(";").has_value()) {
+                                    VariableDefinition variable;
+                                    variable.VariableName = VarName->mText;
+                                    if (VarType->mType == AUTO) {
+                                        variable.VariableType = Type(VarValue->StatementType.mName, VarValue->StatementType.mType);
+                                    } else {
+                                        variable.VariableType = Type(VarType->mName, VarType->mType);
+                                    }
+                                    variable.IsGlobal = false;
+                                    variable.InFonction = false;
+                                    if (argument == "fonction") {
+                                        variable.InFonction = true;
+                                    }
+                                    if (VarValue->StatementType.mType == STRING) {
+                                        std::replace(VarValue->StatementName.begin(), VarValue->StatementName.end(), '"', ' ');
+                                    }
+                                    variable.VariableValue = VarValue->StatementName;
+
+                                    mVariables[variable.VariableName] = variable;
+
+                                    return true;
+                                } else {
+                                    std::cerr << "Merci de signifier la fin de la declaration de la variable avec ';'." << std::endl;
                                 }
                             } else if (CheckerIdentifiant().has_value()) {
                                 --mCurrentToken;
@@ -303,6 +336,11 @@ namespace FPL {
                                                 VariableDefinition variable;
                                                 variable.VariableName = VarName->mText;
                                                 variable.VariableType = Type(VarType->mName, VarType->mType);
+                                                variable.IsGlobal = false;
+                                                variable.InFonction = false;
+                                                if (argument == "fonction") {
+                                                    variable.InFonction = true;
+                                                }
                                                 variable.VariableValue = OldVariable.VariableValue;
 
                                                 mVariables[variable.VariableName] = variable;
@@ -352,6 +390,21 @@ namespace FPL {
                                 std::cerr << "Veuillez donner une valeur en rapport avec le type de la variable." << std::endl;
                             }
                         } else {
+                            auto PossibleVar = CheckerIdentifiant();
+                            if (PossibleVar.has_value()) {
+                                if (CheckerOperateur(";").has_value()) {
+                                    if (isVariable(PossibleVar->mText)) {
+                                        if (mVariables[PossibleVar->mText].VariableType.mType == mVariables[VarName->mText].VariableType.mType) {
+                                            mVariables[VarName->mText].VariableValue = mVariables[PossibleVar->mText].VariableValue;
+                                            return true;
+                                        } else {
+                                            std::cerr << "Le type de la variable n'est pas le même que celui de la variable que vous voulez modifier." << std::endl;
+                                        }
+                                    } else {
+                                        std::cerr << "La variable n'existe pas." << std::endl;
+                                    }
+                                }
+                            }
                             std::cerr << "Veuillez preciser la nouvelle valeur de la variable." << std::endl;
                         }
                     } else {
@@ -429,14 +482,14 @@ namespace FPL {
         return false;
     }
 
-    bool Parser::ManagerInstruction() {
+    bool Parser::ManagerInstruction(std::optional<std::string> argument) {
         auto parseStart = mCurrentToken; // std::vector<Token>::iterator
         auto PeutEtreInstruction = CheckerIdentifiant();
         if (PeutEtreInstruction.has_value()) {
             if (PeutEtreInstruction->mText == "envoyer") {
                 if (PrintInstruction(parseStart)) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "variable") {
-                if (VariableInstruction()) { return true; } else { return false; }
+                if (VariableInstruction(argument)) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "changer") {
                 if (ChangerInstruction()) { return true; } else { return false; }
             } else if (PeutEtreInstruction->mText == "definir") {
@@ -453,12 +506,12 @@ namespace FPL {
 
 
 
-    void Parser::parse(std::vector<Token> &tokens) {
+    void Parser::parse(std::vector<Token> &tokens, std::optional<std::string> argument) {
         mEndToken = tokens.end();
         mCurrentToken = tokens.begin();
 
         while (mCurrentToken != mEndToken) { // Tant que tout le fichier n'est pas parcouru et qu'on n'a pas analysé tous les éléments.
-            if (ManagerInstruction()) {
+            if (ManagerInstruction(argument)) {
 
             } else {
                 if (mCurrentToken->mText.empty() || mCurrentToken->mType == ESPACEVIDE ) {
