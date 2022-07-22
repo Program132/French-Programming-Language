@@ -1,6 +1,8 @@
 definir n(entier a) {
-    variable entier b -> 10;
-    variable auto globale cc -> a;
+    variable entier b -> a;
+    envoyer b;
+    variable decimal c -> a;
+    envoyer c;
 }
 
 appeler n : a 5;
